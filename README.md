@@ -33,8 +33,8 @@ This is the repository for my personal portfolio website, showcasing my skills, 
   - [Built With](#built-with)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Usage](#usage)
+    - [Installation](#installation-1)
+  - [Usage](#usage-1)
   - [Roadmap](#roadmap)
   - [Contact](#contact)
 
