@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { throttle } from '../utils/helpers';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -77,14 +78,14 @@ const Hero = () => {
     };
   }, [currentRoleIndex]);
 
-  // Mouse tracking for parallax effect
+  // Mouse tracking for parallax effect - throttled for performance
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = throttle((e) => {
       setMousePosition({
         x: (e.clientX - window.innerWidth / 2) / 50,
         y: (e.clientY - window.innerHeight / 2) / 50
       });
-    };
+    }, 50); // Throttle to 50ms for smooth parallax
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);

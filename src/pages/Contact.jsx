@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { EmailIcon, LinkedInIcon, GitHubIcon, InstagramIcon } from '../components/TechIcons';
+import { config } from '../config';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ const Contact = () => {
     message: ''
   });
   const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
 
   useEffect(() => {
     // Set visible by default after a short delay as fallback
@@ -41,19 +44,76 @@ const Contact = () => {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setSubmitStatus('error');
+      return false;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setSubmitStatus('error');
+      return false;
+    }
+    if (!formData.message.trim()) {
+      setSubmitStatus('error');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({ name: '', email: '', message: '' });
-    alert('Thank you for reaching out! Your message means a lot to me, and I\'ll get back to you soon. Looking forward to our conversation!');
+    
+    if (!validateForm()) {
+      alert('Please fill in all fields correctly.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // For now, this logs to console. In production, integrate with:
+      // - EmailJS (npm install @emailjs/browser)
+      // - Formspree
+      // - Backend API endpoint
+      // Example with EmailJS:
+      // const response = await emailjs.send(
+      //   process.env.VITE_EMAILJS_SERVICE_ID,
+      //   process.env.VITE_EMAILJS_TEMPLATE_ID,
+      //   {
+      //     to_email: config.email,
+      //     from_name: formData.name,
+      //     from_email: formData.email,
+      //     message: formData.message
+      //   },
+      //   process.env.VITE_EMAILJS_PUBLIC_KEY
+      // );
+
+      console.log('Form submitted:', formData);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      
+      // Auto-clear success message after 5 seconds
+      setTimeout(() => setSubmitStatus(null), 5000);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+      // Auto-clear error message after 5 seconds
+      setTimeout(() => setSubmitStatus(null), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -88,10 +148,10 @@ const Contact = () => {
                   Email
                 </h3>
                 <a 
-                  href="mailto:bacolorjamesclark@gmail.com" 
+                  href={`mailto:${config.email}`} 
                   className="text-slate-300 hover:text-[#F0E7D5] transition-colors duration-300 block text-base sm:text-lg font-medium break-all"
                 >
-                  bacolorjamesclark@gmail.com
+                  {config.email}
                 </a>
               </div>
             </div>
@@ -104,7 +164,7 @@ const Contact = () => {
                   LinkedIn
                 </h3>
                 <a 
-                  href="https://www.linkedin.com/in/james-clark-bacolor-7b6b34296" 
+                  href={config.linkedIn} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-slate-300 hover:text-blue-400 transition-colors duration-300 block text-base sm:text-lg font-medium"
@@ -122,7 +182,7 @@ const Contact = () => {
                   GitHub
                 </h3>
                 <a 
-                  href="https://github.com/Oumazshin" 
+                  href={config.github} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-slate-300 hover:text-gray-300 transition-colors duration-300 block text-base sm:text-lg font-medium"
@@ -140,7 +200,7 @@ const Contact = () => {
                   Instagram
                 </h3>
                 <a 
-                  href="https://www.instagram.com/jamsxc_" 
+                  href={config.instagram} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-slate-300 hover:text-pink-400 transition-colors duration-300 block text-base sm:text-lg font-medium"
@@ -166,6 +226,18 @@ const Contact = () => {
               <p className="text-slate-300 text-sm sm:text-base mt-2">I'd love to hear from you</p>
             </div>
             
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="mb-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg text-green-200 text-sm relative z-10">
+                ✓ Thank you! I'll get back to you soon.
+              </div>
+            )}
+            {submitStatus === 'error' && (
+              <div className="mb-4 p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-red-200 text-sm relative z-10">
+                ✗ Please fill in all fields correctly and try again.
+              </div>
+            )}
+            
             <div className="flex-1 flex flex-col space-y-6 sm:space-y-8 relative z-10">
               <div className="form-group">
                 <label htmlFor="name" className="block text-[#F0E7D5] font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
@@ -178,8 +250,9 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                   placeholder="Enter your full name"
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95"
+                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               
@@ -194,8 +267,9 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                   placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95"
+                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               
@@ -209,18 +283,20 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                   rows="5"
                   placeholder="Share your vision, ideas, or simply say hello. I'd love to hear from you..."
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 resize-vertical min-h-[140px] sm:min-h-[160px] text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95"
+                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 resize-vertical min-h-[140px] sm:min-h-[160px] text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
                 ></textarea>
               </div>
               
               <button 
                 type="submit" 
-                className="group w-full py-4 sm:py-5 bg-[#F0E7D5] text-[#212842] rounded-xl font-bold text-lg sm:text-xl transition-all duration-300 hover:bg-[#F0E7D5]/90 hover:scale-105 hover:shadow-lg hover:shadow-[#F0E7D5]/20 active:scale-95 mt-2"
+                disabled={isSubmitting}
+                className="group w-full py-4 sm:py-5 bg-[#F0E7D5] text-[#212842] rounded-xl font-bold text-lg sm:text-xl transition-all duration-300 hover:bg-[#F0E7D5]/90 hover:scale-105 hover:shadow-lg hover:shadow-[#F0E7D5]/20 active:scale-95 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <span className="flex items-center justify-center gap-2 sm:gap-3">
-                  Let's Connect
+                  {isSubmitting ? 'Sending...' : 'Let\'s Connect'}
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                   </svg>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { throttle } from '../utils/helpers';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -6,11 +7,11 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Throttle scroll events for better performance
+    const handleScroll = throttle(() => {
       setScrolled(window.scrollY > 50);
-    };
 
-    const handleSectionChange = () => {
+      // Check which section is in view
       const sections = ['home', 'about', 'skills', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
@@ -24,13 +25,11 @@ const Navbar = () => {
           }
         }
       }
-    };
+    }, 100); // Throttle to 100ms
 
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', handleSectionChange);
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleSectionChange);
     };
   }, []);
 
@@ -42,6 +41,7 @@ const Navbar = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(sectionId);
     }
     setIsMenuOpen(false);
   };

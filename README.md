@@ -1,192 +1,71 @@
-# My Personal Portfolio
+# Personal Portfolio
 
-This repository contains my personal portfolio website — a single-page React app built with Vite and Tailwind CSS to showcase projects, skills, and ways to contact me.
+A modern, responsive portfolio website built with React, Vite, and Tailwind CSS.
 
-## Table of Contents
+## Features
 
-- [My Personal Portfolio](#my-personal-portfolio)
-  - [Table of Contents](#table-of-contents)
-  - [About The Project](#about-the-project)
-  - [Built With](#built-with)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Usage](#usage)
-  - [Roadmap](#roadmap)
-  - [Contact](#contact)
-- [My Personal Portfolio](#my-personal-portfolio-1)
-  - [Table of Contents](#table-of-contents-1)
-  - [About The Project](#about-the-project-1)
-  - [Built With](#built-with-1)
-  - [Getting Started](#getting-started-1)
-    - [Prerequisites](#prerequisites-1)
-    - [Installation](#installation-1)
-  - [Usage](#usage-1)
-  - [Roadmap](#roadmap-1)
-  - [Contact](#contact-1)
+- **Responsive Design** - Mobile-first approach with smooth animations
+- **Code-Split** - Optimized bundle loading with lazy components
+- **Error Boundaries** - Crash prevention and user-friendly error handling
+- **Form Validation** - Enhanced contact form with real-time validation
+- **Performance Optimized** - Throttled event listeners, ~40KB bundle reduction
 
-## About The Project
+## Tech Stack
 
-This portfolio is a single-page application built with React, Vite, and Tailwind CSS. It features a modern design with smooth animations and a responsive layout.
-
-The website includes the following sections:
-
-- **Hero:** A brief introduction to who I am and what I do.
-- **About:** More details about my background, passion for technology, and education.
-- **Skills:** A list of my technical skills and technologies I'm proficient in.
-- **Projects:** A showcase of my recent projects with links to their repositories.
-- **Contact:** A form or contact details to get in touch.
-
-## Built With
-
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
+- React 19
+- Vite
+- Tailwind CSS 4
+- JavaScript ES6+
 
 ## Getting Started
 
-Follow these steps to get a local copy running for development and testing.
-
-### Prerequisites
-
-- Node.js and npm installed. Install or update npm if needed:
-
-```sh
-npm install npm@latest -g
-```
-
 ### Installation
 
-1. Clone your repository (replace `<your-repo-url>` with your repo URL):
-
-```sh
-git clone <your-repo-url>
-```
-
-2. Change into the project directory and install dependencies:
-
-```sh
+```bash
+git clone <repository-url>
 cd jamescb.github.io
 npm install
 ```
 
-## Usage
+### Development
 
-Run the app in development mode:
-
-```sh
+```bash
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser to view the app.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-Build for production:
+### Production Build
 
-```sh
+```bash
 npm run build
+npm run preview
 ```
 
-If you use a deploy script (for GitHub Pages), run:
+## Deployment
 
-```sh
-npm run deploy
+Deploy to Vercel by setting these environment variables:
+
+```env
+VITE_CONTACT_EMAIL=bacolorjamesclark@gmail.com
+VITE_LINKEDIN_URL=https://www.linkedin.com/in/james-clark-bacolor-7b6b34296
+VITE_GITHUB_URL=https://github.com/Oumazshin
+VITE_INSTAGRAM_URL=https://www.instagram.com/jamsxc_
+VITE_API_BASE_URL=
+VITE_ENABLE_ERROR_TRACKING=false
+VITE_ENABLE_ANALYTICS=false
 ```
 
-## Roadmap
+See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed steps.
 
-- [ ] Add more projects to the portfolio
-- [ ] Implement a blog section
-- [ ] Improve performance and accessibility
+## Documentation
+
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - How to deploy
+- **[ENV_VARIABLES_GUIDE.md](./ENV_VARIABLES_GUIDE.md)** - Environment setup
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Pre-deployment verification
+- **[CODE_OPTIMIZATION_SUMMARY.md](./CODE_OPTIMIZATION_SUMMARY.md)** - Code changes explained
+- **[OPTIMIZATION_REPORT.md](./OPTIMIZATION_REPORT.md)** - Technical optimization details
 
 ## Contact
 
-James Clark Bacolor - jcbb.jamesclark@gmail.com
-
-# My Personal Portfolio
-
-This is the repository for my personal portfolio website, showcasing my skills, projects, and journey as a Computer Science student and aspiring software developer.
-
-## Table of Contents
-
-- [My Personal Portfolio](#my-personal-portfolio)
-  - [Table of Contents](#table-of-contents)
-  - [About The Project](#about-the-project)
-  - [Built With](#built-with)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Usage](#usage)
-  - [Roadmap](#roadmap)
-  - [Contact](#contact)
-- [My Personal Portfolio](#my-personal-portfolio-1)
-  - [Table of Contents](#table-of-contents-1)
-  - [About The Project](#about-the-project-1)
-  - [Built With](#built-with-1)
-  - [Getting Started](#getting-started-1)
-    - [Prerequisites](#prerequisites-1)
-    - [Installation](#installation-1)
-  - [Usage](#usage-1)
-  - [Roadmap](#roadmap-1)
-  - [Contact](#contact-1)
-
-## About The Project
-
-This portfolio is a single-page application built with React, Vite, and Tailwind CSS. It features a modern design with smooth animations and a responsive layout.
-
-The website includes the following sections:
-- **Hero:** A brief introduction to who I am and what I do.
-- **About:** More details about my background, passion for technology, and education.
-- **Skills:** A list of my technical skills and technologies I'm proficient in.
-- **Projects:** A showcase of my recent projects with links to their repositories.
-- **Contact:** A form to get in touch with me.
-
-## Built With
-
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-
-## Getting Started
-
-To get a local copy up and running follow these simple steps.
-
-### Prerequisites
-
-- npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Oumazshin/my-portfolio.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-
-## Usage
-
-To run the app in the development mode:
-```sh
-npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-To build the app for production:
-```sh
-npm run build
-```
-
-## Roadmap
-
-- [ ] Add more projects to the portfolio.
-- [ ] Implement a blog section.
-- [ ] Improve performance and accessibility.
-
-## Contact
-
-James Clark Bacolor - jcbb.jamesclark@gmail.com
+James Clark Bacolor - [bacolorjamesclark@gmail.com](mailto:bacolorjamesclark@gmail.com)
