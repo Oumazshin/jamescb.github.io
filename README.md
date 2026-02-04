@@ -2,18 +2,18 @@
 
 This is the repository for my personal portfolio website, showcasing my skills, projects, and journey as a Computer Science student and aspiring software developer.
 
-![Portfolio Screenshot](https://via.placeholder.com/800x400.png?text=Portfolio+Screenshot)
-
 ## Table of Contents
 
-- [About The Project](#about-the-project)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contact](#contact)
+- [My Personal Portfolio](#my-personal-portfolio)
+  - [Table of Contents](#table-of-contents)
+  - [About The Project](#about-the-project)
+  - [Built With](#built-with)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Usage](#usage)
+  - [Roadmap](#roadmap)
+  - [Contact](#contact)
 
 ## About The Project
 
