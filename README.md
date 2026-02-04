@@ -1,3 +1,26 @@
+### Installation
+
+1. Clone the repo
+  ```sh
+  git clone https://github.com/Oumazshin/my-portfolio.git
+  ```
+2. Install NPM packages
+  ```sh
+  npm install
+  ```
+
+## Usage
+
+To run the app in the development mode:
+```sh
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+To build the app for production:
+```sh
+npm run build
+```
 # My Personal Portfolio
 
 This is the repository for my personal portfolio website, showcasing my skills, projects, and journey as a Computer Science student and aspiring software developer.
