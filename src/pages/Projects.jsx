@@ -66,7 +66,7 @@ const Projects = () => {
       description: "A disaster-preparedness mobile app that empowers communities to navigate flood-prone areas safely and locate nearby evacuation centers during typhoons. Built collaboratively with my team, this app demonstrates our commitment to using technology for community safety and emergency preparedness.",
       image: <ProjectPlaceholder title="eHanda" />,
       technologies: ["React Native", "JavaScript", "Supabase"],
-      githubUrl: "https://github.com/Oumazshin/eHanda",
+      githubUrl: "https://github.com/Oumazshin/eHANDA",
       liveUrl: "#"
     },
     {
@@ -74,7 +74,15 @@ const Projects = () => {
       description: "A gamified productivity platform that transforms everyday tasks into engaging adventures. Users build character stats, maintain streaks, and level up across life categories like fitness, academics, and personal growth—proving that productivity can be both rewarding and fun.",
       image: <ProjectPlaceholder title="Venture" />,
       technologies: ["React.js", "Vite", "Tailwind CSS", "Supabase"],
-      githubUrl: "https://github.com/Oumazshin/venture",
+      githubUrl: "https://github.com/paisenpai/venture_app",
+      liveUrl: "#"
+    },
+    {
+      title: "StateCare",
+      description: "A modern, trustworthy health-support web application for symptom assessment and health tracking. StateCare provides informational, non-diagnostic results to help users understand their symptoms and make informed health decisions. ⚠️ Medical Disclaimer: StateCare provides informational support only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.",
+      image: <ProjectPlaceholder title="StateCare" />,
+      technologies: ["React", "JavaScript", "Tailwind CSS"],
+      githubUrl: "https://github.com/shousrn/statecare-app",
       liveUrl: "#"
     },
     {
@@ -82,7 +90,7 @@ const Projects = () => {
       description: "An inclusive web platform designed to bridge the digital divide for Persons with Disabilities (PWDs). This accessibility-focused application streamlines government form submissions with thoughtful UX design, featuring an intuitive admin dashboard that prioritizes dignity and ease of use.",
       image: <ProjectPlaceholder title="EaseAccess" />,
       technologies: ["HTML", "CSS3", "JavaScript", "MySQL"],
-      githubUrl: "https://github.com/Oumazshin/easeaccess",
+      githubUrl: "https://github.com/jdrewt/EaseAccess",
       liveUrl: "#"
     },
     {
