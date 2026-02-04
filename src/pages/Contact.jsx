@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import { EmailIcon, LinkedInIcon, GitHubIcon, InstagramIcon } from '../components/TechIcons';
+import Toast from '../components/Toast';
 import { config } from '../config';
 
 const Contact = () => {
@@ -10,9 +12,14 @@ const Contact = () => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
+  const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
 
   useEffect(() => {
+    // Initialize EmailJS
+    if (config.emailjs.isConfigured) {
+      emailjs.init(config.emailjs.publicKey);
+    }
+
     // Set visible by default after a short delay as fallback
     const fallbackTimer = setTimeout(() => {
       setIsVisible(true);
@@ -53,15 +60,15 @@ const Contact = () => {
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setSubmitStatus('error');
+      setToast({ type: 'error', message: 'Please enter your name.' });
       return false;
     }
     if (!formData.email.trim() || !formData.email.includes('@')) {
-      setSubmitStatus('error');
+      setToast({ type: 'error', message: 'Please enter a valid email address.' });
       return false;
     }
     if (!formData.message.trim()) {
-      setSubmitStatus('error');
+      setToast({ type: 'error', message: 'Please enter a message.' });
       return false;
     }
     return true;
@@ -71,46 +78,50 @@ const Contact = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      alert('Please fill in all fields correctly.');
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitStatus(null);
 
     try {
-      // For now, this logs to console. In production, integrate with:
-      // - EmailJS (npm install @emailjs/browser)
-      // - Formspree
-      // - Backend API endpoint
-      // Example with EmailJS:
-      // const response = await emailjs.send(
-      //   process.env.VITE_EMAILJS_SERVICE_ID,
-      //   process.env.VITE_EMAILJS_TEMPLATE_ID,
-      //   {
-      //     to_email: config.email,
-      //     from_name: formData.name,
-      //     from_email: formData.email,
-      //     message: formData.message
-      //   },
-      //   process.env.VITE_EMAILJS_PUBLIC_KEY
-      // );
+      // Check if EmailJS is configured
+      if (!config.emailjs.isConfigured) {
+        setToast({ 
+          type: 'error', 
+          message: 'Email service not configured. Please contact me through LinkedIn or GitHub instead.' 
+        });
+        setIsSubmitting(false);
+        return;
+      }
 
-      console.log('Form submitted:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      
-      // Auto-clear success message after 5 seconds
-      setTimeout(() => setSubmitStatus(null), 5000);
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        config.emailjs.serviceId,
+        config.emailjs.templateId,
+        {
+          to_email: config.email,
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          reply_to: formData.email
+        }
+      );
+
+      if (response.status === 200) {
+        setToast({ 
+          type: 'success', 
+          message: '✓ Message sent! I\'ll get back to you soon.' 
+        });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error('Failed to send email');
+      }
     } catch (error) {
       console.error('Form submission error:', error);
-      setSubmitStatus('error');
-      // Auto-clear error message after 5 seconds
-      setTimeout(() => setSubmitStatus(null), 5000);
+      setToast({ 
+        type: 'error', 
+        message: 'Failed to send message. Please try again or email me directly.' 
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -138,77 +149,77 @@ const Contact = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-5xl mx-auto items-stretch">
-          {/* Contact Cards */}
+          {/* Contact Cards - Full Container as Anchor */}
           <div className={`flex flex-col justify-between space-y-4 sm:space-y-6 order-2 lg:order-1 ${isVisible ? 'fade-in-left stagger-2' : 'opacity-0'}`}>
-            <div className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-[#F0E7D5]/40 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px]">
+            <a 
+              href={`mailto:${config.email}`}
+              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-[#F0E7D5]/40 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-[#F0E7D5]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="flex flex-col justify-center h-full relative z-10">
                 <h3 className="text-[#F0E7D5] text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
                   <EmailIcon className="w-6 h-6 sm:w-7 sm:h-7 text-[#F0E7D5] transition-transform duration-300 group-hover:scale-110" />
                   Email
                 </h3>
-                <a 
-                  href={`mailto:${config.email}`} 
-                  className="text-slate-300 hover:text-[#F0E7D5] transition-colors duration-300 block text-base sm:text-lg font-medium break-all"
-                >
+                <p className="text-slate-300 group-hover:text-[#F0E7D5] transition-colors duration-300 block text-base sm:text-lg font-medium break-all">
                   {config.email}
-                </a>
+                </p>
               </div>
-            </div>
+            </a>
             
-            <div className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-blue-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px]">
+            <a 
+              href={config.linkedIn}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-blue-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="flex flex-col justify-center h-full relative z-10">
                 <h3 className="text-blue-400 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
                   <LinkedInIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
                   LinkedIn
                 </h3>
-                <a 
-                  href={config.linkedIn} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-slate-300 hover:text-blue-400 transition-colors duration-300 block text-base sm:text-lg font-medium"
-                >
+                <p className="text-slate-300 group-hover:text-blue-400 transition-colors duration-300 block text-base sm:text-lg font-medium">
                   Connect with me professionally
-                </a>
+                </p>
               </div>
-            </div>
+            </a>
             
-            <div className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-gray-300/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px]">
+            <a 
+              href={config.github}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-gray-300/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-gray-300/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="flex flex-col justify-center h-full relative z-10">
                 <h3 className="text-gray-300 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
                   <GitHubIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
                   GitHub
                 </h3>
-                <a 
-                  href={config.github} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-slate-300 hover:text-gray-300 transition-colors duration-300 block text-base sm:text-lg font-medium"
-                >
+                <p className="text-slate-300 group-hover:text-gray-300 transition-colors duration-300 block text-base sm:text-lg font-medium">
                   Check out my repositories
-                </a>
+                </p>
               </div>
-            </div>
+            </a>
             
-            <div className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-pink-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px]">
+            <a 
+              href={config.instagram}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-pink-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="flex flex-col justify-center h-full relative z-10">
                 <h3 className="text-pink-400 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
                   <InstagramIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
                   Instagram
                 </h3>
-                <a 
-                  href={config.instagram} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-slate-300 hover:text-pink-400 transition-colors duration-300 block text-base sm:text-lg font-medium"
-                >
+                <p className="text-slate-300 group-hover:text-pink-400 transition-colors duration-300 block text-base sm:text-lg font-medium">
                   Follow my journey
-                </a>
+                </p>
               </div>
-            </div>
+            </a>
           </div>
           
           {/* Enhanced Contact Form */}
@@ -225,18 +236,6 @@ const Contact = () => {
               </h3>
               <p className="text-slate-300 text-sm sm:text-base mt-2">I'd love to hear from you</p>
             </div>
-            
-            {/* Status Messages */}
-            {submitStatus === 'success' && (
-              <div className="mb-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg text-green-200 text-sm relative z-10">
-                ✓ Thank you! I'll get back to you soon.
-              </div>
-            )}
-            {submitStatus === 'error' && (
-              <div className="mb-4 p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-red-200 text-sm relative z-10">
-                ✗ Please fill in all fields correctly and try again.
-              </div>
-            )}
             
             <div className="flex-1 flex flex-col space-y-6 sm:space-y-8 relative z-10">
               <div className="form-group">
@@ -306,6 +305,16 @@ const Contact = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={5000}
+        />
+      )}
     </section>
   );
 };

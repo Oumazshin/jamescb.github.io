@@ -263,6 +263,33 @@ body {
   }
 }
 
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(240, 231, 213, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(240, 231, 213, 0.6);
+  }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes magneticPull {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -623,6 +650,28 @@ body {
   box-shadow: 0 20px 40px rgba(33, 40, 66, 0.4);
 }
 
+/* Anchor Card Interactive States */
+a.hover-lift:active {
+  transform: translateY(-4px) scale(0.98);
+  box-shadow: 0 12px 24px rgba(33, 40, 66, 0.3);
+}
+
+/* Full container anchor - enhances pointer behavior */
+.contact-card-anchor {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.contact-card-anchor:focus {
+  outline: none;
+}
+
+.contact-card-anchor:focus-visible {
+  outline: 2px solid rgba(240, 231, 213, 0.4);
+  outline-offset: 2px;
+}
+
 .hover-glow:hover {
   box-shadow: 0 0 30px rgba(33, 40, 66, 0.5);
 }
@@ -713,7 +762,124 @@ body {
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
 
+/* Enhanced Dynamic Animations */
+.bounce-in {
+  animation: slideInScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.glow-animation {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.rotate-continuous {
+  animation: rotate 8s linear infinite;
+}
+
+.slide-in-blur-left {
+  animation: slideInBlur 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slide-in-blur-right {
+  animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bounce-soft {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Hover Effects - Enhanced */
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+}
+
+.hover-scale-md:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale-lg:hover {
+  transform: scale(1.1);
+}
+
+.hover-shift-up:hover {
+  transform: translateY(-4px);
+}
+
+.hover-shift-down:hover {
+  transform: translateY(4px);
+}
+
+.hover-brighten:hover {
+  filter: brightness(1.1);
+}
+
+.hover-blur-out:hover {
+  filter: blur(0.5px);
+}
+
+/* Text Effects */
+.text-glow-effect {
+  animation: textGlow 2s ease-in-out infinite;
+}
+
+.text-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Border Animations */
+.border-glow {
+  border-color: rgba(240, 231, 213, 0.3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.border-glow:hover {
+  border-color: rgba(240, 231, 213, 0.6);
+  box-shadow: 0 0 20px rgba(240, 231, 213, 0.2);
+}
+
 /* Mobile-specific improvements */
+/* Subtle Toast Animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Subtle Transitions - 200-300ms for responsive feel */
+.transition-subtle {
+  transition: all 0.2s ease-out;
+}
+
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Button/Form subtle feedback */
+input:focus, textarea:focus, select:focus {
+  transition: all 0.2s ease-out;
+}
+
+button:active {
+  transition: all 0.1s ease-out;
+}
+
+/* Smooth hover effects */
+.smooth-hover {
+  transition: all 0.25s ease-out;
+}
+
+.smooth-hover:hover {
+  transform: translateY(-2px);
+}
+
 @media (max-width: 640px) {
   button, a {
     min-height: 44px;

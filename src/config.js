@@ -10,6 +10,20 @@ export const config = {
   github: import.meta.env.VITE_GITHUB_URL || 'https://github.com/Oumazshin',
   instagram: import.meta.env.VITE_INSTAGRAM_URL || 'https://www.instagram.com/jamsxc_',
   
+  // EmailJS Configuration (for contact form)
+  // Sign up at https://www.emailjs.com/ to get your credentials
+  emailjs: {
+    serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
+    templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '',
+    // Note: If EmailJS is not configured, contact form will show a fallback message
+    isConfigured: !!(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID &&
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID &&
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+  },
+  
   // API Configuration (for future use)
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL || '',
   

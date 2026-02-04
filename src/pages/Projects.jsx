@@ -59,31 +59,31 @@ const Projects = () => {
     };
   }, []);
 
-  // Enhanced project data 
+  // Enhanced project data with verified links
   const projects = [
-    {
-      title: "eHanda",
-      description: "A disaster-preparedness mobile app that empowers communities to navigate flood-prone areas safely and locate nearby evacuation centers during typhoons. Built collaboratively with my team, this app demonstrates our commitment to using technology for community safety and emergency preparedness.",
-      image: <ProjectPlaceholder title="eHanda" />,
-      technologies: ["React Native", "JavaScript", "Supabase"],
-      githubUrl: "https://github.com/Oumazshin/eHANDA",
-      liveUrl: "#"
-    },
     {
       title: "Venture",
       description: "A gamified productivity platform that transforms everyday tasks into engaging adventures. Users build character stats, maintain streaks, and level up across life categories like fitness, academics, and personal growth—proving that productivity can be both rewarding and fun.",
       image: <ProjectPlaceholder title="Venture" />,
       technologies: ["React.js", "Vite", "Tailwind CSS", "Supabase"],
       githubUrl: "https://github.com/paisenpai/venture_app",
-      liveUrl: "#"
+      liveUrl: null
+    },
+    {
+      title: "eHanda",
+      description: "A disaster-preparedness mobile app that empowers communities to navigate flood-prone areas safely and locate nearby evacuation centers during typhoons. Built collaboratively with my team, this app demonstrates our commitment to using technology for community safety and emergency preparedness.",
+      image: <ProjectPlaceholder title="eHanda" />,
+      technologies: ["React Native", "JavaScript", "Supabase"],
+      githubUrl: "https://github.com/Oumazshin/eHANDA",
+      liveUrl: null
     },
     {
       title: "StateCare",
-      description: "A modern, trustworthy health-support web application for symptom assessment and health tracking. StateCare provides informational, non-diagnostic results to help users understand their symptoms and make informed health decisions. ⚠️ Medical Disclaimer: StateCare provides informational support only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.",
+      description: "A symptom-based preliminary diagnosis web application. StateCare is a modern, trustworthy health-support platform for symptom assessment and health tracking, providing informational results to help users understand their symptoms and make informed health decisions. ⚠️ Medical Disclaimer: StateCare provides informational support only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.",
       image: <ProjectPlaceholder title="StateCare" />,
       technologies: ["React", "JavaScript", "Tailwind CSS"],
       githubUrl: "https://github.com/shousrn/statecare-app",
-      liveUrl: "#"
+      liveUrl: null
     },
     {
       title: "EaseAccess",
@@ -91,15 +91,15 @@ const Projects = () => {
       image: <ProjectPlaceholder title="EaseAccess" />,
       technologies: ["HTML", "CSS3", "JavaScript", "MySQL"],
       githubUrl: "https://github.com/jdrewt/EaseAccess",
-      liveUrl: "#"
+      liveUrl: null
     },
     {
       title: "Personal Portfolio",
-      description: "A modern, responsive showcase of my journey as a developer—built with performance and aesthetics in mind. This portfolio represents not just my technical capabilities, but my attention to user experience, clean design principles, and the art of storytelling through code.",
+      description: "A modern, responsive showcase of my journey as a developer—built with performance and aesthetics in mind. This portfolio features smooth animations, optimized performance, and demonstrates my attention to user experience, clean design principles, and the art of storytelling through code.",
       image: <ProjectPlaceholder title="Portfolio" />,
       technologies: ["React", "Tailwind CSS", "Vite", "JavaScript"],
       githubUrl: "https://github.com/Oumazshin/my-portfolio",
-      liveUrl: "#"
+      liveUrl: null
     }
   ];
 
