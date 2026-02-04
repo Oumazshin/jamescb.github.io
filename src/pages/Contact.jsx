@@ -110,7 +110,7 @@ const Contact = () => {
       if (response.status === 200) {
         setToast({ 
           type: 'success', 
-          message: '✓ Message sent! I\'ll get back to you soon.' 
+          message: 'Message sent successfully. I\'ll get back to you soon.' 
         });
         setFormData({ name: '', email: '', message: '' });
       } else {

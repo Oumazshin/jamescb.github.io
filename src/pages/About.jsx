@@ -108,16 +108,15 @@ const About = () => {
               <h3 className="text-lg font-bold text-[#F0E7D5] mb-3">Focus</h3>
               <div className="grid grid-cols-2 gap-2 flex-grow">
                 {[
-                  { name: 'Full-Stack', icon: '🚀' },
-                  { name: 'UX Design', icon: '🎨' },
-                  { name: 'Problem Solving', icon: '🧩' },
-                  { name: 'Collaboration', icon: '🤝' }
+                  { name: 'Full-Stack Development' },
+                  { name: 'User Experience' },
+                  { name: 'Problem Solving' },
+                  { name: 'Teamwork' }
                 ].map((skill, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-center justify-center p-2 bg-[#F0E7D5]/5 rounded-lg border border-[#F0E7D5]/10 hover:border-[#F0E7D5]/30 hover:bg-[#F0E7D5]/10 transition-all group text-center"
+                    className="flex flex-col items-center justify-center p-3 bg-[#F0E7D5]/5 rounded-lg border border-[#F0E7D5]/10 hover:border-[#F0E7D5]/30 hover:bg-[#F0E7D5]/10 transition-all group text-center"
                   >
-                    <span className="text-lg mb-1 group-hover:scale-110 transition-transform">{skill.icon}</span>
                     <span className="text-xs text-[#F0E7D5]/80 group-hover:text-[#F0E7D5] font-medium">{skill.name}</span>
                   </div>
                 ))}
@@ -132,7 +131,7 @@ const About = () => {
             <div className="bg-gradient-to-br from-[#F0E7D5]/10 to-[#F0E7D5]/5 backdrop-blur-sm rounded-2xl border border-[#F0E7D5]/25 p-6 hover:border-[#F0E7D5]/40 transition-all duration-300 flex-1 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-[#F0E7D5] rounded-lg flex items-center justify-center">
-                  <span className="text-sm font-bold text-[#212842]">🎓</span>
+                  <span className="text-sm font-bold text-[#212842]">■</span>
                 </div>
                 <h3 className="text-lg font-bold text-[#F0E7D5]">Education</h3>
               </div>
@@ -148,7 +147,7 @@ const About = () => {
             <div className="bg-gradient-to-br from-[#F0E7D5]/10 to-[#F0E7D5]/5 backdrop-blur-sm rounded-2xl border border-[#F0E7D5]/25 p-6 hover:border-[#F0E7D5]/40 transition-all duration-300 flex-1 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-[#F0E7D5] rounded-lg flex items-center justify-center">
-                  <span className="text-sm font-bold text-[#212842]">💼</span>
+                  <span className="text-sm font-bold text-[#212842]">►</span>
                 </div>
                 <h3 className="text-lg font-bold text-[#F0E7D5]">Open To</h3>
               </div>

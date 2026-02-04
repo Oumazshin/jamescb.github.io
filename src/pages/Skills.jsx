@@ -4,6 +4,7 @@ import { HTMLIcon, JavaScriptIcon, ReactIcon, TailwindIcon, ViteIcon, MySQLIcon,
 const Skills = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedSkills, setAnimatedSkills] = useState(new Set());
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
     // Set visible by default after a short delay as fallback
@@ -128,7 +129,10 @@ const Skills = () => {
     }
   ];
 
-  const categories = [...new Set(skills.map(skill => skill.category))];
+  const categories = ['All', ...new Set(skills.map(skill => skill.category))];
+  const filteredSkills = selectedCategory === 'All' 
+    ? skills 
+    : skills.filter(skill => skill.category === selectedCategory);
 
   return (
         <section id="skills" className="min-h-screen py-20 sm:py-24 lg:py-28 relative overflow-hidden bg-slate-900/20">
@@ -157,18 +161,23 @@ const Skills = () => {
         {/* Category Pills */}
         <div className={`flex flex-wrap justify-center gap-3 mb-12 ${isVisible ? 'fade-in-up stagger-2' : 'opacity-0'}`}>
           {categories.map((category, index) => (
-            <div 
+            <button
               key={category}
-              className="group px-6 py-3 bg-[#F0E7D5]/5 backdrop-blur-sm border border-[#F0E7D5]/20 rounded-full text-sm text-[#F0E7D5]/80 hover:text-[#F0E7D5] hover:border-[#F0E7D5]/40 hover:bg-[#F0E7D5]/10 transition-all duration-300 hover:scale-105"
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-3 backdrop-blur-sm border rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                selectedCategory === category
+                  ? 'bg-[#F0E7D5]/20 border-[#F0E7D5]/60 text-[#F0E7D5] shadow-lg shadow-[#F0E7D5]/20'
+                  : 'bg-[#F0E7D5]/5 border-[#F0E7D5]/20 text-[#F0E7D5]/80 hover:border-[#F0E7D5]/40 hover:bg-[#F0E7D5]/10 hover:text-[#F0E7D5]'
+              }`}
             >
-              <span className="relative z-10 font-medium">{category}</span>
-            </div>
+              {category}
+            </button>
           ))}
         </div>
         
         {/* Skills Grid - Redesigned with larger cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-          {skills.map((skill, index) => (
+          {filteredSkills.map((skill, index) => (
             <div 
               key={index}
               className={`group relative bg-[#F0E7D5]/5 backdrop-blur-sm border border-[#F0E7D5]/10 rounded-2xl p-8 hover:bg-[#F0E7D5]/10 hover:border-[#F0E7D5]/20 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#F0E7D5]/10 cursor-pointer ${
