@@ -75,6 +75,4 @@ npm run build
 
 ## Contact
 
-James Clark Bacolor - bacolorjamesclark@gmail.com
-
-Project Link: [https://github.com/Oumazshin/my-portfolio](https://github.com/Oumazshin/my-portfolio)
+James Clark Bacolor - jcbb.jamesclark@gmail.com
