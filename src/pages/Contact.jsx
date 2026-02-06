@@ -84,7 +84,7 @@ const Contact = () => {
           {/* Identity Column */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             <motion.div custom={0} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"} className={containerStyles}>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-4">Direct Endpoint</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-4">My Email</p>
               <div className="flex items-center justify-between cursor-pointer group/copy" onClick={handleCopyEmail}>
                 <span className="text-xs font-mono lowercase tracking-tight break-all">{myEmail}</span>
                 <div className="opacity-40 group-hover/copy:opacity-100 transition-opacity">
@@ -96,7 +96,7 @@ const Contact = () => {
             {/* High-Impact Live Status Card */}
             <motion.div custom={1} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"} className={`${containerStyles} flex-grow flex flex-col`}>
               <div className="flex justify-between items-start mb-8">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Live Status Monitor</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Availability Status</p>
                 <div className="flex flex-col items-end opacity-20">
                   <span className="text-[8px] font-mono leading-none">FRQ: 60Hz</span>
                   <span className="text-[8px] font-mono leading-none">SYNC: OK</span>

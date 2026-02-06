@@ -16,9 +16,9 @@ const Navbar = () => {
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Toolkit' },
-    { id: 'projects', label: 'Works' },
-    { id: 'contact', label: 'Inbound' }
+    { id: 'skills', label: 'Skills' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contacts' }
   ];
 
   // Logic: High-performance section tracking
