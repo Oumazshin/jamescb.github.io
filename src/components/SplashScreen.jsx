@@ -1,205 +1,173 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+/**
+ * System Boot Loader: Bacolor .SYS
+ * Task: Identity Synchronization & Transition Fluidity
+ * Theme: Industrial Bento
+ */
 
 const SplashScreen = ({ onComplete }) => {
   const [stage, setStage] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  // Global Industrial Motion Token
+  const industrialEase = [0.215, 0.61, 0.355, 1];
 
   useEffect(() => {
     const timeline = [
-      { time: 300, stage: 1 },     // Orbits appear
-      { time: 800, stage: 2 },     // Title + subtitle + code block
-      { time: 4000, stage: 3 },    // Exit animation begins (give time to read)
-      { time: 5000, stage: 4 }     // Complete fade-out
+      { time: 800, stage: 1 },   // Initialize Ambience
+      { time: 1800, stage: 2 },  // Reveal Identity
+      { time: 4200, stage: 3 },  // System Handshake
+      { time: 5000, stage: 4 }   // Termination
     ];
 
     const timers = timeline.map(({ time, stage: s }) =>
       setTimeout(() => setStage(s), time)
     );
 
-    const completeTimer = setTimeout(onComplete, 5000);
+    // Simulated technical progress
+    const progressInterval = setInterval(() => {
+      setProgress(prev => (prev < 100 ? prev + 1 : 100));
+    }, 35);
+
+    const completeTimer = setTimeout(onComplete, 5200);
+    
     return () => {
       timers.forEach(t => clearTimeout(t));
+      clearInterval(progressInterval);
       clearTimeout(completeTimer);
     };
   }, [onComplete]);
 
   return (
-    <div className={`fixed inset-0 z-50 bg-gradient-to-br from-[#212842] via-[#1a1f35] to-[#212842] flex items-center justify-center overflow-hidden transition-all duration-1000 ${
-      stage >= 4 ? 'opacity-0 scale-110' : 'opacity-100 scale-100'
-    }`}>
-      
-      <style jsx>{`
-        @keyframes orbitingSphere {
-          0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
-        }
-
-        @keyframes spherePulse {
-          0%, 100% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        @keyframes titleMorphIn {
-          0% { 
-            opacity: 0; 
-            transform: perspective(1000px) rotateX(90deg) scale(0.5);
-            filter: blur(20px);
-          }
-          100% { 
-            opacity: 1; 
-            transform: perspective(1000px) rotateX(0deg) scale(1);
-            filter: blur(0px);
-          }
-        }
-
-        @keyframes subtitleSlideIn {
-          0% { 
-            opacity: 0; 
-            transform: translateX(-60px);
-            filter: blur(10px);
-          }
-          100% { 
-            opacity: 1; 
-            transform: translateX(0);
-            filter: blur(0px);
-          }
-        }
-
-        @keyframes codeBlockAppear {
-          0% { 
-            opacity: 0; 
-            transform: translateY(30px) scaleY(0);
-          }
-          100% { 
-            opacity: 1; 
-            transform: translateY(0) scaleY(1);
-          }
-        }
-
-        @keyframes exitFadeUp {
-          0% { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-          100% { 
-            opacity: 0;
-            transform: translateY(-50px);
-          }
-        }
-
-        .orbit { animation: orbitingSphere 3s linear infinite; }
-        .sphere-pulse { animation: spherePulse 1.5s ease-in-out infinite; }
-        .title-morph { animation: titleMorphIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .subtitle-slide { animation: subtitleSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .code-block { animation: codeBlockAppear 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .exit-fade { animation: exitFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-
-        .grid-bg {
-          background-image: 
-            linear-gradient(rgba(240, 231, 213, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(240, 231, 213, 0.03) 1px, transparent 1px);
-          background-size: 50px 50px;
-          background-position: center;
-        }
-      `}</style>
-
-      {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30"></div>
-
-      {/* Floating gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F0E7D5]/5 rounded-full blur-3xl" style={{
-          animation: stage >= 3 ? 'exitFadeUp 0.8s forwards' : 'none'
-        }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#212842]/10 rounded-full blur-2xl" style={{
-          animation: stage >= 3 ? 'exitFadeUp 0.8s 0.2s forwards' : 'none'
-        }}></div>
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10 text-center" style={{
-        animation: stage >= 3 ? 'exitFadeUp 0.8s forwards' : 'none'
-      }}>
-        
-        {/* Orbiting elements container */}
-        {stage >= 1 && (
-          <div className="relative mb-12 w-40 h-40 mx-auto">
-            {/* Center dot */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-3 h-3 bg-[#F0E7D5] rounded-full shadow-lg" style={{
-                boxShadow: '0 0 30px rgba(240, 231, 213, 0.6)'
-              }}></div>
-            </div>
+    <AnimatePresence>
+      {stage < 4 && (
+        <motion.div 
+          initial={{ opacity: 1 }}
+          exit={{ 
+            opacity: 0, 
+            filter: 'blur(20px)', 
+            scale: 1.05,
+            transition: { duration: 0.8, ease: industrialEase }
+          }}
+          className="fixed inset-0 z-[100] bg-[#0a0f1d] flex flex-col items-center justify-center overflow-hidden font-mono text-[#F0E7D5] selection:bg-[#F0E7D5] selection:text-[#0a0f1d]"
+        >
+          {/* Ambient Theme Accents */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-blue-500/[0.03] blur-[180px] rounded-full" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-purple-500/[0.03] blur-[180px] rounded-full" />
             
-            {/* Orbiting spheres */}
-            <div className="absolute inset-0 orbit">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#F0E7D5]/80 rounded-full sphere-pulse" style={{
-                boxShadow: '0 0 15px rgba(240, 231, 213, 0.5)'
-              }}></div>
-            </div>
-            <div className="absolute inset-0 orbit" style={{ animationDelay: '-1.33s' }}>
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#F0E7D5]/60 rounded-full sphere-pulse" style={{
-                boxShadow: '0 0 12px rgba(240, 231, 213, 0.4)',
-                animationDelay: '0.5s'
-              }}></div>
-            </div>
-            <div className="absolute inset-0 orbit" style={{ animationDelay: '-2.66s' }}>
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#F0E7D5]/40 rounded-full sphere-pulse" style={{
-                boxShadow: '0 0 10px rgba(240, 231, 213, 0.3)',
-                animationDelay: '1s'
-              }}></div>
-            </div>
+            {/* Sync scanning line with Projects.jsx */}
+            <motion.div 
+              animate={{ top: ['-10%', '110%'] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              className="absolute left-0 right-0 h-[1px] bg-[#F0E7D5]/10 blur-sm z-20"
+            />
           </div>
-        )}
 
-        {/* Main title */}
-        {stage >= 1 && (
-          <div className="title-morph mb-6">
-            <h1 className="text-7xl sm:text-8xl font-bold text-[#F0E7D5] tracking-tight">
-              James Clark
-            </h1>
-          </div>
-        )}
+          <div className="relative z-10 w-full max-w-4xl px-8">
+            
+            {/* 1. Header Metadata */}
+            <div className="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={stage >= 1 ? { opacity: 1, x: 0 } : {}}
+                transition={{ ease: industrialEase }}
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-1">Source_Root</p>
+                <h2 className="text-xl font-black uppercase tracking-tighter">PUP_STA_MESA</h2>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={stage >= 1 ? { opacity: 1, x: 0 } : {}}
+                transition={{ ease: industrialEase }}
+                className="text-right"
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-1">Session_ID</p>
+                <h2 className="text-xl font-black uppercase tracking-tighter italic">V_03.0_2026</h2>
+              </motion.div>
+            </div>
 
-        {/* Subtitle */}
-        {stage >= 2 && (
-          <div className="subtitle-slide mb-8">
-            <p className="text-[#F0E7D5]/70 text-lg font-light tracking-widest uppercase">
-              Creative Developer
-            </p>
-          </div>
-        )}
+            {/* 2. Identity Reveal */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={stage >= 2 ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, ease: industrialEase }}
+                className="lg:col-span-8"
+              >
+                <h1 className="text-6xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.8] mb-4">
+                  My <br />
+                  <span className="text-white/10 italic">Portfolio</span>
+                </h1>
+                <div className="flex items-center gap-4">
+                  <div className="h-[1px] w-12 bg-[#F0E7D5]" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.5em] opacity-40">Creative Technologist</p>
+                </div>
+              </motion.div>
 
-        {/* Code block */}
-        {stage >= 2 && (
-          <div className="code-block max-w-md mx-auto mt-8">
-            <div className="bg-[#F0E7D5]/5 backdrop-blur-sm border border-[#F0E7D5]/20 rounded-lg p-4 text-left font-mono text-sm">
-              <div className="text-[#F0E7D5]/60">
-                <span className="text-[#F0E7D5]/40">&lt;</span><span className="text-[#F0E7D5]">Portfolio</span><span className="text-[#F0E7D5]/40">&gt;</span>
+              {/* 3. Terminal Registry */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={stage >= 2 ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, ease: industrialEase }}
+                className="lg:col-span-4 bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md"
+              >
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-[8px] font-black uppercase tracking-widest text-white/20 mb-1">Affiliations</p>
+                    <p className="text-[10px] font-bold uppercase leading-tight">VP Finance — JBECP PUP</p>
+                    <p className="text-[10px] font-bold uppercase leading-tight">Web Dev — GDG Campus</p>
+                  </div>
+                  <div className="pt-4 border-t border-white/10">
+                    <p className="text-[8px] font-black uppercase tracking-widest text-white/20 mb-1">Status</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
+                      <p className="text-[10px] font-black uppercase tracking-tighter">Handshake_Complete</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* 4. Progress Logic */}
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between items-end">
+                <motion.span 
+                  initial={{ opacity: 0 }}
+                  animate={stage >= 2 ? { opacity: 0.4 } : {}}
+                  className="text-[9px] font-black uppercase tracking-[0.3em]"
+                >
+                  Initializing_Core_Protocol...
+                </motion.span>
+                <span className="text-[10px] font-mono font-black">{progress}%</span>
               </div>
-              <div className="text-[#F0E7D5]/50 ml-4">
-                <span className="text-[#F0E7D5]/40">&lt;</span><span className="text-[#F0E7D5]/70">Building</span><span className="text-[#F0E7D5]/40">&gt;</span>
-                <span className="text-[#F0E7D5]/60 inline-block ml-2">Digital Experiences</span>
-              </div>
-              <div className="text-[#F0E7D5]/50 ml-4">
-                <span className="text-[#F0E7D5]/40">&lt;</span><span className="text-[#F0E7D5]/70">With</span><span className="text-[#F0E7D5]/40">&gt;</span>
-                <span className="text-[#F0E7D5]/60 inline-block ml-2">React, Vite & Passion</span>
-              </div>
-              <div className="text-[#F0E7D5]/60">
-                <span className="text-[#F0E7D5]/40">&lt;/</span><span className="text-[#F0E7D5]">Portfolio</span><span className="text-[#F0E7D5]/40">&gt;</span>
+              <div className="h-[1px] w-full bg-white/5 relative">
+                <motion.div 
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${progress}%` }}
+                  className="absolute top-0 left-0 h-full bg-[#F0E7D5]"
+                />
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Status indicator */}
-        {stage >= 2 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-[#F0E7D5] rounded-full animate-pulse"></div>
-            <span className="text-[#F0E7D5]/60 text-sm">Entering portfolio</span>
           </div>
-        )}
-      </div>
-    </div>
+
+          {/* Footer Coordinates */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={stage >= 2 ? { opacity: 0.2 } : {}}
+            className="absolute bottom-10 left-8 right-8 flex justify-between items-center"
+          >
+            <p className="text-[9px] font-black uppercase tracking-[0.4em]">14.5995° N | 120.9842° E</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.4em]">Auth_Root // JB</p>
+          </motion.div>
+
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

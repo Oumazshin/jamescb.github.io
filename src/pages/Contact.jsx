@@ -1,320 +1,170 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-import { EmailIcon, LinkedInIcon, GitHubIcon, InstagramIcon } from '../components/TechIcons';
+import { EmailIcon, LinkedInIcon, GitHubIcon, InstagramIcon, CopyIcon } from '../components/TechIcons';
 import Toast from '../components/Toast';
 import { config } from '../config';
 
+/**
+ * Unified Connection Portal
+ * Task: Live Status Monitor Design Upgrade
+ */
+
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+  const [copied, setCopied] = useState(false);
+  const [toast, setToast] = useState(null);
+  const sectionRef = useRef(null);
 
-  useEffect(() => {
-    // Initialize EmailJS
-    if (config.emailjs.isConfigured) {
-      emailjs.init(config.emailjs.publicKey);
-    }
-
-    // Set visible by default after a short delay as fallback
-    const fallbackTimer = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '50px' }
-    );
-
-    const section = document.getElementById('contact');
-    if (section) {
-      observer.observe(section);
-    }
-
-    return () => {
-      clearTimeout(fallbackTimer);
-      if (section) {
-        observer.unobserve(section);
-      }
-      observer.disconnect();
-    };
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const myEmail = "jcbb.jamesclark@gmail.com";
+  const industrialEase = [0.215, 0.61, 0.355, 1];
+  const containerStyles = "bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/[0.07] hover:border-[#F0E7D5]/30 transition-all duration-500 relative overflow-hidden group";
+  
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1, y: 0,
+      transition: { delay: i * 0.1, duration: 0.6, ease: industrialEase }
+    })
   };
 
-  const validateForm = () => {
-    if (!formData.name.trim()) {
-      setToast({ type: 'error', message: 'Please enter your name.' });
-      return false;
-    }
-    if (!formData.email.trim() || !formData.email.includes('@')) {
-      setToast({ type: 'error', message: 'Please enter a valid email address.' });
-      return false;
-    }
-    if (!formData.message.trim()) {
-      setToast({ type: 'error', message: 'Please enter a message.' });
-      return false;
-    }
-    return true;
+  useEffect(() => {
+    if (config.emailjs.isConfigured) emailjs.init(config.emailjs.publicKey);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setIsVisible(true);
+    }, { threshold: 0.1 });
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(myEmail);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
     setIsSubmitting(true);
-
     try {
-      // Check if EmailJS is configured
-      if (!config.emailjs.isConfigured) {
-        setToast({ 
-          type: 'error', 
-          message: 'Email service not configured. Please contact me through LinkedIn or GitHub instead.' 
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Send email using EmailJS
+      if (!config.emailjs.isConfigured) throw new Error('Service Unconfigured');
       const response = await emailjs.send(
-        config.emailjs.serviceId,
-        config.emailjs.templateId,
-        {
-          to_email: config.email,
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          reply_to: formData.email
-        }
+        config.emailjs.serviceId, config.emailjs.templateId,
+        { to_email: myEmail, from_name: formData.name, from_email: formData.email, message: formData.message }
       );
-
       if (response.status === 200) {
-        setToast({ 
-          type: 'success', 
-          message: 'Message sent successfully. I\'ll get back to you soon.' 
-        });
+        setToast({ type: 'success', message: 'Inquiry successfully transmitted.' });
         setFormData({ name: '', email: '', message: '' });
-      } else {
-        throw new Error('Failed to send email');
       }
     } catch (error) {
-      console.error('Form submission error:', error);
-      setToast({ 
-        type: 'error', 
-        message: 'Failed to send message. Please try again or email me directly.' 
-      });
+      setToast({ type: 'error', message: 'Transmission failure.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="min-h-screen py-20 sm:py-24 lg:py-28 relative overflow-hidden">
-      {/* Enhanced Background decorations */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 to-transparent"></div>
-      <div className="absolute top-10 left-10 w-20 h-20 bg-[#212842]/10 rounded-full blur-xl morphing"></div>
-      <div className="absolute bottom-20 right-20 w-32 h-32 bg-[#212842]/5 rounded-full blur-2xl floating"></div>
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className={`text-center mb-12 sm:mb-16 ${isVisible ? 'fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-[#F0E7D5] relative break-words">
-            <span className="text-[#F0E7D5]">
-              Get In Touch
-            </span>
-            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#F0E7D5]/60 rounded-full -mb-2"></span>
-          </h2>
-          <p className="max-w-3xl mx-auto mb-8 text-base sm:text-lg text-[#F0E7D5]/80 px-4 leading-relaxed">
-            I'm actively seeking <span className="text-[#F0E7D5] font-bold bg-[#F0E7D5]/10 px-2 py-1 rounded-md">internship opportunities</span> and meaningful collaborations. 
-            Whether you're interested in discussing technology, exploring potential projects, or simply connecting with a passionate developer—I'd love to hear from you.
-          </p>
-        </div>
+    <section ref={sectionRef} id="contact" className="min-h-screen py-32 relative bg-[#0a0f1d] text-[#F0E7D5] selection:bg-[#F0E7D5] selection:text-slate-900 overflow-hidden px-6">
+      <div className="max-w-6xl mx-auto relative z-10">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-5xl mx-auto items-stretch">
-          {/* Contact Cards - Full Container as Anchor */}
-          <div className={`flex flex-col justify-between space-y-4 sm:space-y-6 order-2 lg:order-1 ${isVisible ? 'fade-in-left stagger-2' : 'opacity-0'}`}>
-            <a 
-              href={`mailto:${config.email}`}
-              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-[#F0E7D5]/40 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#F0E7D5]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="flex flex-col justify-center h-full relative z-10">
-                <h3 className="text-[#F0E7D5] text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
-                  <EmailIcon className="w-6 h-6 sm:w-7 sm:h-7 text-[#F0E7D5] transition-transform duration-300 group-hover:scale-110" />
-                  Email
-                </h3>
-                <p className="text-slate-300 group-hover:text-[#F0E7D5] transition-colors duration-300 block text-base sm:text-lg font-medium break-all">
-                  {config.email}
-                </p>
-              </div>
-            </a>
-            
-            <a 
-              href={config.linkedIn}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-blue-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="flex flex-col justify-center h-full relative z-10">
-                <h3 className="text-blue-400 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
-                  <LinkedInIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
-                  LinkedIn
-                </h3>
-                <p className="text-slate-300 group-hover:text-blue-400 transition-colors duration-300 block text-base sm:text-lg font-medium">
-                  Connect with me professionally
-                </p>
-              </div>
-            </a>
-            
-            <a 
-              href={config.github}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-gray-300/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-300/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="flex flex-col justify-center h-full relative z-10">
-                <h3 className="text-gray-300 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
-                  <GitHubIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
-                  GitHub
-                </h3>
-                <p className="text-slate-300 group-hover:text-gray-300 transition-colors duration-300 block text-base sm:text-lg font-medium">
-                  Check out my repositories
-                </p>
-              </div>
-            </a>
-            
-            <a 
-              href={config.instagram}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group p-6 sm:p-8 bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-600/50 hover:border-pink-400/50 transition-all duration-500 hover-lift relative overflow-hidden shadow-lg hover:shadow-xl flex-1 min-h-[120px] sm:min-h-[130px] cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="flex flex-col justify-center h-full relative z-10">
-                <h3 className="text-pink-400 text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
-                  <InstagramIcon className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300 group-hover:scale-110" />
-                  Instagram
-                </h3>
-                <p className="text-slate-300 group-hover:text-pink-400 transition-colors duration-300 block text-base sm:text-lg font-medium">
-                  Follow my journey
-                </p>
-              </div>
-            </a>
+        {/* Header Unit */}
+        <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: industrialEase }} className="mb-20">
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/40">Inbound Requests</span>
+            <div className="h-[1px] w-12 bg-white/20" />
           </div>
-          
-          {/* Enhanced Contact Form */}
-          <form 
-            className={`bg-slate-800/70 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-slate-600/50 order-1 lg:order-2 relative hover-glow shadow-lg hover:shadow-xl flex flex-col justify-between min-h-full ${isVisible ? 'fade-in-right stagger-3' : 'opacity-0'}`} 
-            onSubmit={handleSubmit}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#F0E7D5]/5 to-transparent rounded-2xl opacity-50"></div>
-            
-            {/* Form header */}
-            <div className="mb-6 sm:mb-8 text-center relative z-10">
-              <h3 className="text-2xl sm:text-3xl font-bold text-[#F0E7D5] text-glow">
-                Send Message
-              </h3>
-              <p className="text-slate-300 text-sm sm:text-base mt-2">I'd love to hear from you</p>
-            </div>
-            
-            <div className="flex-1 flex flex-col space-y-6 sm:space-y-8 relative z-10">
-              <div className="form-group">
-                <label htmlFor="name" className="block text-[#F0E7D5] font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
-                  Full Name <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitting}
-                  placeholder="Enter your full name"
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+          <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
+            Let's <br /><span className="text-white/20">Collaborate</span>
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Identity Column */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            <motion.div custom={0} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"} className={containerStyles}>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-4">Direct Endpoint</p>
+              <div className="flex items-center justify-between cursor-pointer group/copy" onClick={handleCopyEmail}>
+                <span className="text-xs font-mono lowercase tracking-tight break-all">{myEmail}</span>
+                <div className="opacity-40 group-hover/copy:opacity-100 transition-opacity">
+                  {copied ? <span className="text-[9px] font-black uppercase text-green-500">Copied</span> : <CopyIcon className="w-4 h-4" />}
+                </div>
               </div>
-              
-              <div className="form-group">
-                <label htmlFor="email" className="block text-[#F0E7D5] font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
-                  Email Address <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitting}
-                  placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+            </motion.div>
+
+            {/* High-Impact Live Status Card */}
+            <motion.div custom={1} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"} className={`${containerStyles} flex-grow flex flex-col`}>
+              <div className="flex justify-between items-start mb-8">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Live Status Monitor</p>
+                <div className="flex flex-col items-end opacity-20">
+                  <span className="text-[8px] font-mono leading-none">FRQ: 60Hz</span>
+                  <span className="text-[8px] font-mono leading-none">SYNC: OK</span>
+                </div>
               </div>
-              
-              <div className="form-group">
-                <label htmlFor="message" className="block text-[#F0E7D5] font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
-                  Message <span className="text-red-400">*</span>
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitting}
-                  rows="5"
-                  placeholder="Share your vision, ideas, or simply say hello. I'd love to hear from you..."
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/90 border border-slate-600/60 rounded-lg text-[#F0E7D5] focus:outline-none focus:border-[#F0E7D5]/60 focus:ring-2 focus:ring-[#F0E7D5]/20 transition-all duration-300 placeholder-slate-400 resize-vertical min-h-[140px] sm:min-h-[160px] text-sm sm:text-base hover:border-slate-500/80 hover:bg-slate-900/95 disabled:opacity-50 disabled:cursor-not-allowed"
-                ></textarea>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F0E7D5]">System_Active</p>
               </div>
-              
-              <button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="group w-full py-4 sm:py-5 bg-[#F0E7D5] text-[#212842] rounded-xl font-bold text-lg sm:text-xl transition-all duration-300 hover:bg-[#F0E7D5]/90 hover:scale-105 hover:shadow-lg hover:shadow-[#F0E7D5]/20 active:scale-95 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <span className="flex items-center justify-center gap-2 sm:gap-3">
-                  {isSubmitting ? 'Sending...' : 'Let\'s Connect'}
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                </span>
+
+              <div className="h-[1px] w-full bg-white/10 mb-6" />
+
+              <p className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] mt-auto">
+                Open for <br />
+                <span className="text-white/20 group-hover:text-white/40 transition-colors duration-500">2026</span> <br />
+                Internships
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Connection Portal (8-Wide) */}
+          <motion.div custom={2} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"} className={`${containerStyles} lg:col-span-8`}>
+            <h3 className="text-[10px] font-black text-white/40 mb-8 uppercase tracking-[0.3em]">Connection_Portal</h3>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-1">Full_Name</label>
+                  <input type="text" placeholder="Enter name" required className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-[#F0E7D5]/40 outline-none text-sm font-bold transition-all" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}/>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-1">Email_Address</label>
+                  <input type="email" placeholder="Enter email" required className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-[#F0E7D5]/40 outline-none text-sm font-bold transition-all" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}/>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-1">Message_Inquiry</label>
+                <textarea rows="6" placeholder="How can I help you?" required className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-[#F0E7D5]/40 outline-none text-sm font-bold resize-none transition-all" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})}/>
+              </div>
+              <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-[#F0E7D5] text-[#0a0f1d] font-black uppercase text-xs tracking-[0.4em] rounded-xl hover:scale-[1.01] transition-all disabled:opacity-30">
+                {isSubmitting ? 'Sending Message...' : 'Submit Inquiry'}
               </button>
-            </div>
-          </form>
+            </form>
+          </motion.div>
+
+          {/* Social Nexus */}
+          <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {[
+              { label: 'LinkedIn', icon: <LinkedInIcon />, url: config.linkedIn },
+              { label: 'GitHub', icon: <GitHubIcon />, url: config.github },
+              { label: 'Instagram', icon: <InstagramIcon />, url: config.instagram },
+            ].map((social, idx) => (
+              <motion.a key={social.label} href={social.url} target="_blank" rel="noopener noreferrer" custom={3 + idx} variants={cardVariants} initial="hidden" animate={isVisible ? "visible" : "hidden"}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-5 h-5 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity duration-300">
+                    {social.icon}
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] leading-none">{social.label}</span>
+                </div>
+                <span className="text-white/20 group-hover:translate-x-1 transition-transform duration-300">→</span>
+              </motion.a>
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* Toast Notification */}
-      {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type}
-          onClose={() => setToast(null)}
-          duration={5000}
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </section>
   );
 };
